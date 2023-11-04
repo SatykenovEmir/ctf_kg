@@ -1,13 +1,13 @@
 package com.ctf_kg.ctf_kg.dto.authentication;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 
-@Getter
-@Setter
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AuthenticationResponse {
 
     private UserResponse user;

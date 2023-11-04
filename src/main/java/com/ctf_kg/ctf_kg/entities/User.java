@@ -25,14 +25,13 @@ public class User implements UserDetails {
     @Id
     private Long id;
 
-    private String username;
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @OneToOne(cascade = CascadeType.ALL)
-    private Player player;
+    private Citizen citizen;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

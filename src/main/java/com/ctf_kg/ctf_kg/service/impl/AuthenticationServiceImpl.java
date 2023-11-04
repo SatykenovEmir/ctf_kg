@@ -4,32 +4,36 @@ import com.ctf_kg.ctf_kg.dto.RegisterRequest;
 import com.ctf_kg.ctf_kg.dto.authentication.AuthenticationResponse;
 import com.ctf_kg.ctf_kg.dto.authentication.UserResponse;
 import com.ctf_kg.ctf_kg.entities.User;
-import com.ctf_kg.ctf_kg.enums.Role;
 import com.ctf_kg.ctf_kg.exception.BadCredentialsException;
-import com.ctf_kg.ctf_kg.repositories.PlayerRepository;
+import com.ctf_kg.ctf_kg.repositories.CitizenRepository;
 import com.ctf_kg.ctf_kg.repositories.UserRepository;
 import com.ctf_kg.ctf_kg.security.JwtTokenProvider;
 import com.ctf_kg.ctf_kg.service.AuthenticationService;
+import com.ctf_kg.ctf_kg.dto.authentication.AuthenticationRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
-    private final PlayerRepository playerRepository;
+    private final CitizenRepository citizenRepository;
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManager authenticationManager;
+
 
 
     @Override
-    public ResponseEntity<AuthenticationResponse> playerRegister(RegisterRequest request) {
+    public ResponseEntity<AuthenticationResponse> register(RegisterRequest request) {
 
        // checkUsernameIsExist(request.getEmail());
 //        String reg = "^A-Za-z0-9+_.-]+@(.+)$";
@@ -76,9 +80,38 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public ResponseEntity<AuthenticationResponse> adminRegister(RegisterRequest request) {
         return null;
     }
-
     @Override
-    public Object authenticate(RegisterRequest request) {
-        return null;
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        Optional<User> optionalAuth = userRepository.findByEmail(request.getEmail());
+        if (optionalAuth.isEmpty()) {
+            throw new NotFoundException("User not found with email: " + request.getEmail());
+        }
+
+        User auth = optionalAuth.get();
+
+        userRepository.save(auth);
+
+
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    request.getEmail(),
+                    request.getPassword()));
+        } catch (AuthenticationException e) {
+            // Обработка ошибки аутентификации, например, неверный email или пароль
+            throw new org.springframework.security.authentication.BadCredentialsException("Authentication failed: " + e.getMessage() + request.getEmail());
+        }
+
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new NotFoundException("User not found"));
+        String token = jwtTokenProvider.createToken(user.getEmail(), userRepository.findByEmail(user.getEmail()).get().getRole());
+//        Optional<UserMessageInfo> userMessageInfo = userMessageInfoRepository.findByEmail(user.getEmail());
+//        List<Message> messages = messageRepository.findAllBySender(user.getEmail());
+
+// Obtain WebSocket session for the authenticated user
+
+        return AuthenticationResponse.builder()
+                .user(convertToresponse(user))
+                .accessToken(token)
+                .build();
     }
+
 }

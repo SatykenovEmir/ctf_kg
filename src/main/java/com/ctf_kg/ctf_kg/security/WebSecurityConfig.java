@@ -48,6 +48,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/wss/**").permitAll()
                 .antMatchers("/main/**").permitAll()
                 .antMatchers("/chat/**").permitAll()
+                .antMatchers("/citizen/**").permitAll()
+                .antMatchers("/parser/**").permitAll()
                 //.antMatchers("/chat/**").permitAll()
                 // Disallow everything else..
                 .anyRequest().authenticated();
