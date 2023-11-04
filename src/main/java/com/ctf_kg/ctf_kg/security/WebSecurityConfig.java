@@ -50,6 +50,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/chat/**").permitAll()
                 .antMatchers("/citizen/**").permitAll()
                 .antMatchers("/parser/**").permitAll()
+                .antMatchers("/product/**").permitAll()
+                .antMatchers("/contract/**").permitAll()
+                .antMatchers("/plan/**").permitAll()
                 //.antMatchers("/chat/**").permitAll()
                 // Disallow everything else..
                 .anyRequest().authenticated();

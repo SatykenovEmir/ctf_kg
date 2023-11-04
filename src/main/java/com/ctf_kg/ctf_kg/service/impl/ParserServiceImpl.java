@@ -1,11 +1,20 @@
 package com.ctf_kg.ctf_kg.service.impl;
 
+import com.ctf_kg.ctf_kg.entities.BudgetInstitution;
+import com.ctf_kg.ctf_kg.entities.Contracts;
+import com.ctf_kg.ctf_kg.entities.NotBudgetInstitution;
+import com.ctf_kg.ctf_kg.entities.Product;
+import com.ctf_kg.ctf_kg.repositories.BudgetInstitutionRepository;
+import com.ctf_kg.ctf_kg.repositories.ContractRepository;
+import com.ctf_kg.ctf_kg.repositories.NotBudgetInstitutionRepository;
+import com.ctf_kg.ctf_kg.repositories.ProductRepository;
 import com.ctf_kg.ctf_kg.service.ParserService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -25,6 +34,15 @@ import static io.opentelemetry.api.internal.ValidationUtil.log;
 
 @Service
 public class ParserServiceImpl implements ParserService {
+
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private ContractRepository contractRepository;
+    @Autowired
+    private BudgetInstitutionRepository budgetInstitutionRepository;
+    @Autowired
+    private NotBudgetInstitutionRepository notBudgetInstitutionRepository;
 
     private WebDriver driver;
     private WebDriverWait wait;
@@ -46,7 +64,6 @@ public class ParserServiceImpl implements ParserService {
             for (int i = 0; i < maxPages; i++) {
                 parseSeleniumPage();
                 System.out.println("success23");
-                System.out.println("the index:"+i);
 
                 // Use Selenium to parse the page
                 // Implement logic to navigate to the next page if necessary
@@ -57,46 +74,103 @@ public class ParserServiceImpl implements ParserService {
     }
 
     private void parseSeleniumPage() {
-        System.out.println("success3");
+        // Assume we have a button to go to the next page
 
+
+        // Wait for the presence of the table after clicking next page
+        List<WebElement> tableRows = driver.findElements(By.cssSelector("div.ui-datatable-tablewrapper > table > tbody"));
+        System.out.println("tableRows size: "+tableRows.size());
+        for (WebElement row : tableRows) {
+            System.out.println("\nstart\n");
+            List<WebElement> webElements = row.findElements(By.className("ui-widget-content"));
+            System.out.println("webElement size: "+webElements.size());
+            for (int i = 0;i < webElements.size();i++){
+                System.out.println("\none user:\n");
+                WebElement webElement = webElements.get(i);
+                String[] parts = webElement.getText().split("\n");
+                System.out.println("the lengs of array: "+parts.length);
+                for (int k = 0; k < parts.length;k++){
+                    addToNotBadgetInstitution(parts[k]);
+                }
+                //addToContract(parts);
+                //addToProduct(parts);
+                //addToBadgetInstitution(parts);
+                //addToNotBadgetInstitution(parts);
+            }
+            System.out.println("\nend\n");
+
+        }
+        System.out.println("\n\nnew page\n\n");
         WebElement nextPageButton = wait.until(ExpectedConditions.elementToBeClickable(By.className("ui-paginator-next")));
-        System.out.println("success4");
         nextPageButton.click();
-
         try {
             Thread.sleep(7000); // 5000 миллисекунд = 5 секунд
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("success5");
+    }
 
-        List<WebElement> tableRows = driver.findElements(By.cssSelector("div.ui-datatable-tablewrapper > table > tbody > tr > td"));
-        System.out.println("success7");
+    private void addToNotBadgetInstitution(String input) {
+        int yearIndex = input.lastIndexOf(" ");
+        String year = input.substring(yearIndex + 1);
+        String rest = input.substring(0, yearIndex);
 
-        for (WebElement row : tableRows) {
-            //row.get
+        // Теперь, когда у нас есть оставшаяся часть без года, найдем индекс, где начинается сумма
+        // Сумма предшествует году и отделена пробелом
+        int amountIndex = rest.lastIndexOf(" ");
+        String amount = rest.substring(amountIndex + 1).replace(",", ""); // Удаляем запятые для чистоты числа
+        String name = rest.substring(0, amountIndex);
 
-        }
+        System.out.println("Название: " + name);
+        System.out.println("Сумма: " + amount);
+        System.out.println("Год: " + year);
 
-//            List<WebElement> tds = row.findElements(By.cssSelector("td[role='gridcell']"));
-//            System.out.println("success9");
-//
-//            List<String> rowData = new ArrayList<>();
-//            for (WebElement td : tds) {
-//                System.out.println("success10");
-//                String data = td.getText();
-//                rowData.add(data);
-//
-//                System.out.println("success11");
-//                System.out.println(data);
-//                System.out.println("success11.5");
-//
-//            }
-//            System.out.println("success12");
+        NotBudgetInstitution institution = new NotBudgetInstitution();
+        institution.setAccountName(name);
+        institution.setAmount(amount);
+        institution.setYear(year);
 
-            // Here you can process the row data
-           // System.out.println(rowData);
+        notBudgetInstitutionRepository.save(institution);
+    }
 
+    private void addToBadgetInstitution(String[] parts) {
+        BudgetInstitution institution = new BudgetInstitution();
+        institution.setBudgetId((parts[1]));
+        institution.setAccountNumber(parts[3]);
+        institution.setAccountName(parts[5]);
+        institution.setExpenditure(parts[7]);
+        institution.setAmount(parts[9]);
+        institution.setReservedAmount(parts[11]);
+        institution.setSavedAmount(parts[13]);
+        institution.setResidualAmount(parts[13]);
+        institution.setYear(parts[13]);
+        budgetInstitutionRepository.save(institution);
+    }
+
+    private void addToContract(String[] parts) {
+        Contracts contracts = new Contracts();
+        contracts.setContractId((parts[1]));
+        contracts.setContractNumber(parts[3]);
+        contracts.setAccountName(parts[5]);
+        contracts.setExpendITure(parts[7]);
+        contracts.setAmount(parts[9]);
+        contracts.setReservedAmount(parts[11]);
+        contracts.setSavedAmount(parts[13]);
+        contracts.setResidualAmount(parts[13]);
+        contracts.setYear(parts[13]);
+        contractRepository.save(contracts);
+    }
+
+    private void addToProduct(String[] parts) {
+            Product product = new Product();
+            product.setNumber((parts[1]));
+            product.setOrganizationName(parts[3]);
+            product.setTypeofProduct(parts[5]);
+            product.setNameOfProduct(parts[7]);
+            product.setPlannedPrize(parts[9]);
+            product.setPublicationDate(parts[11]);
+            product.setSupplierProposalDeadLine(parts[13]);
+            productRepository.save(product);
     }
 
     private void initializeWebDriver() {
