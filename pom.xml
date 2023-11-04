@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -8,7 +8,7 @@
 		<version>2.7.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.ctf_kg</groupId>
+	<groupId>com.example</groupId>
 	<artifactId>ctf_kg</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ctf_kg</name>
@@ -23,13 +23,6 @@
 			<artifactId>twilio</artifactId>
 			<version>8.34.1</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.jsoup</groupId>
-			<artifactId>jsoup</artifactId>
-			<version>1.14.3</version> <!-- Use the latest version available -->
-		</dependency>
-
 
 
 		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3 -->
@@ -106,6 +99,12 @@
 		</dependency>
 
 
+		<!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -161,18 +160,6 @@
 			<version>2.10.1</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.htmlparser/htmlparser -->
-
-			<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-java</artifactId>
-			<version>4.1.2</version> <!-- Use the latest version available -->
-		</dependency>
-
-
-
-
 
 	</dependencies>
 
@@ -193,5 +180,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

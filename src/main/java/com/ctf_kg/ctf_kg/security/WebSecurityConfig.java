@@ -1,6 +1,5 @@
 package com.ctf_kg.ctf_kg.security;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -71,9 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-ui/**")//
                 .antMatchers("/configuration/**")//
                 .antMatchers("/webjars/**")//
-                .antMatchers("/public")
-                .antMatchers("/api/v1/auth/**");
-
+                .antMatchers("/public");
     }
 
     @Bean

@@ -22,7 +22,6 @@ import java.util.Base64;
 import java.util.Date;
 
 @Component
-
 public class JwtTokenProvider {
 
 

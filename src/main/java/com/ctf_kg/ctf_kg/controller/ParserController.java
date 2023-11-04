@@ -13,11 +13,11 @@ import java.io.IOException;
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class ParserController {
 
-    private final ParserService parserService;
+   // private final ParserService parserService;
 
-    @GetMapping("/parse")
-    void someValues(@RequestParam(required = false) String url) throws IOException {
-        parserService.parsePages(url, 3);
-    }
+//    @GetMapping("/parse")
+//    void someValues(@RequestParam(required = false) String url) throws IOException {
+//        parserService.parsePages(url, 3);
+//    }
 
 }

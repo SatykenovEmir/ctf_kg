@@ -5,6 +5,7 @@ import com.ctf_kg.ctf_kg.dto.RegisterRequest;
 import com.ctf_kg.ctf_kg.service.AuthenticationService;
 import com.ctf_kg.ctf_kg.service.UserService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ import java.io.FileInputStream;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class AuthenticationController {
     private final AuthenticationService service;
