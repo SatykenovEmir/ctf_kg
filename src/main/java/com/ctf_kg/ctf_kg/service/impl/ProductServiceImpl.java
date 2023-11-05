@@ -9,6 +9,7 @@ import com.ctf_kg.ctf_kg.exception.BadCredentialsException;
 import com.ctf_kg.ctf_kg.mapper.product.ProductMapper;
 import com.ctf_kg.ctf_kg.repositories.ProductRepository;
 import com.ctf_kg.ctf_kg.repositories.UserAllProductInformationRepository;
+import com.ctf_kg.ctf_kg.repositories.UserRepository;
 import com.ctf_kg.ctf_kg.service.ProductService;
 import com.ctf_kg.ctf_kg.service.UserService;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
     private final UserService userService;
     private final UserAllProductInformationRepository userAllProductInformationRepository;
     @Override
@@ -39,8 +41,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public int setFlag(String token, Long productId) {
-        User user = userService.getUsernameFromToken(token);
+    public int setFlag(Long userId, Long productId) {
+        User user = userRepository.findById(userId).orElseThrow();
+
         if (!user.getRole().equals(Role.SMI)){
             throw new BadCredentialsException("the role is not SMI!");
         }
@@ -93,5 +96,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Object[]> getFive() {
         return productRepository.findTopTypeOfProducts();
+    }
+
+    @Override
+    public void comment(String token, Long productId, String content) {
+        User user = userService.getUsernameFromToken(token);
+        if (user.getRole().equals(Role.SMI)){
+            Optional<Product> product = productRepository.findById(productId);
+            if (product.isPresent()){
+
+            }
+        }
     }
 }

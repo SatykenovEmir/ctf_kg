@@ -9,7 +9,9 @@ public interface ProductService {
 
     List<ProductResponse> search(String search);
 
-    int setFlag(String token, Long productId);
+    int setFlag(Long token, Long productId);
 
     List<Object[]> getFive();
+
+    void comment(String token, Long productId, String content);
 }

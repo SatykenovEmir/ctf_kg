@@ -83,9 +83,16 @@ public class ParserServiceImpl implements ParserService {
             for (int i = 0;i < webElements.size();i++){
                 System.out.println("\none user:\n");
                 WebElement webElement = webElements.get(i);
-                List<WebElement> tdElements = webElement.findElements(By.tagName("td"));
-
-                addToPublicPlans(tdElements);
+                String[] parts = webElement.getText().split("\n");
+                System.out.println("the lengs of array: "+parts.length);
+//                for (int k = 0; k < parts.length;k++){
+//                    addToNotBadgetInstitution(parts[k]);
+//                }
+                //addToContract(parts);
+                addToProduct(parts);
+                //addToBadgetInstitution(parts);
+                //addToNotBadgetInstitution(parts);
+                //addToPublicPlans(parts);
             }
             System.out.println("\nend\n");
 
@@ -100,20 +107,15 @@ public class ParserServiceImpl implements ParserService {
         }
     }
 
-    private void addToPublicPlans(List<WebElement> tdElements) {
-        if (tdElements.size() < 6) {
-            System.out.println("Insufficient data in the row");
-            return;
-        }
-
+    private void addToPublicPlans(String[] parts) {
         PublicPlans publicPlans = new PublicPlans();
-        publicPlans.setNumber(tdElements.get(0).getText().trim());
-        publicPlans.setTypeOfPlan(tdElements.get(1).getText().trim());
-        publicPlans.setINN(tdElements.get(2).getText().trim());
-        publicPlans.setNameOfCompany(tdElements.get(3).getText().trim());
-        publicPlans.setYear(tdElements.get(4).getText().trim());
-        publicPlans.setAmount(tdElements.get(5).getText().trim());
-        publicPlans.setLastChange(tdElements.get(6).getText().trim());
+        publicPlans.setNumber((parts[1]));
+        publicPlans.setTypeOfPlan(parts[3]);
+        publicPlans.setINN(parts[5]);
+        publicPlans.setNameOfCompany(parts[7]);
+        publicPlans.setYear(parts[11]);
+        publicPlans.setAmount(parts[13]);
+        publicPlans.setLastChange(parts[13]);
         publicPlanRepository.save(publicPlans);
     }
 

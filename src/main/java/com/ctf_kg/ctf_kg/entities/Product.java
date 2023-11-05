@@ -2,10 +2,9 @@ package com.ctf_kg.ctf_kg.entities;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,7 +15,7 @@ import javax.persistence.Id;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String number;
 
@@ -29,6 +28,8 @@ public class Product {
     private String SupplierProposalDeadLine;
 
     private int flag;//added just now
-
+//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<CommentSmi> commentSmis = new ArrayList<>();
+//
 
 }

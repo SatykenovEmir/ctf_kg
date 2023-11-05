@@ -29,6 +29,7 @@ public class ProductMapperImpl implements ProductMapper{
         productResponse.setOrganizationName(product.getOrganizationName());
         productResponse.setPublicationDate(product.getPublicationDate());
         productResponse.setSupplierProposalDeadLine(product.getSupplierProposalDeadLine());
+        productResponse.setFlag(product.getFlag());
         return productResponse;
     }
 }

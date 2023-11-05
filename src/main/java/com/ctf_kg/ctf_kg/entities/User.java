@@ -21,14 +21,19 @@ import java.util.List;
 @Table(name = "users")
 public class User implements UserDetails {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String firstname;
+    private String lastname;
 
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @OneToOne
+    private FileData fileSMI;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Citizen citizen;

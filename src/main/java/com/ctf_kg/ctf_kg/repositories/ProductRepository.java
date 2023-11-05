@@ -16,4 +16,7 @@
 
         @Query("SELECT p FROM Product p WHERE p.number = :number OR p.organizationName = :organizationName OR p.nameOfProduct = :nameOfProduct")
         List<Product> searchByMultipleFields(@Param("number") String number, @Param("organizationName") String organizationName, @Param("nameOfProduct") String nameOfProduct);
+
+        @Query("SELECT p.organizationName, COUNT(p) AS purchaseCount FROM Product p GROUP BY p.organizationName ORDER BY purchaseCount DESC")
+        List<Object[]> countProductsByOrganization();
     }

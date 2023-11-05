@@ -29,11 +29,6 @@ public class AuthenticationController {
     public ResponseEntity<?> jobSeekerRegister(@RequestBody RegisterRequest request) {
         return service.register(request);
     }
-    @GetMapping("/simpleGet")
-    public String getall(){
-        return "hkahljcksvn,";
-    }
-
 
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest request) {

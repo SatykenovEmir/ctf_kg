@@ -25,13 +25,19 @@ public class ProductController {
     public List<ProductResponse> searchProductResponse(@RequestParam(required = false) String search){
         return productService.search(search);
     }
-    @PostMapping("/setFlag/{productId}")
-    public int setFlag(@RequestHeader("Authorization") String token, @PathVariable Long productId){
-        return productService.setFlag(token, productId);
+    @GetMapping("/setFlag/{userId}/{productId}")
+    public int setFlag(@PathVariable Long userId,@PathVariable Long productId){
+        return productService.setFlag(userId, productId);
     }
     @GetMapping("/getFiveMost")
     public List<Object[]> getFive(){
         return productService.getFive();
+    }
+
+    @PostMapping("/comment/{productId}")
+    public void  comment(@RequestHeader("Authorization") String token, @PathVariable Long productId,
+                         @RequestParam(required = false) String content){
+        productService.comment(token, productId, content);
     }
 
     //private final ProducS
