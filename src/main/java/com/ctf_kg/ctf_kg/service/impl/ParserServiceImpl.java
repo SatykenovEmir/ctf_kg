@@ -88,8 +88,8 @@ public class ParserServiceImpl implements ParserService {
 //                for (int k = 0; k < parts.length;k++){
 //                    addToNotBadgetInstitution(parts[k]);
 //                }
-                //addToContract(parts);
-                addToProduct(parts);
+                addToContract(parts);
+                //addToProduct(parts);
                 //addToBadgetInstitution(parts);
                 //addToNotBadgetInstitution(parts);
                 //addToPublicPlans(parts);
