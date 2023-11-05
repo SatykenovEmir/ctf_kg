@@ -19,6 +19,7 @@ public class CommentSmi {
     private Long userId;
     private String content;
     private String commentedDay;
+
     // Ensure this matches the FK column in the database
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "product_id") // Ensure that 'product_id' is only referenced here.
