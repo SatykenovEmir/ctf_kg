@@ -28,4 +28,7 @@ public class Product {
     private String publicationDate;
     private String SupplierProposalDeadLine;
 
+    private int flag;//added just now
+
+
 }

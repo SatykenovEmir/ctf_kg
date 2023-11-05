@@ -1,13 +1,7 @@
 package com.ctf_kg.ctf_kg.service.impl;
 
-import com.ctf_kg.ctf_kg.entities.BudgetInstitution;
-import com.ctf_kg.ctf_kg.entities.Contracts;
-import com.ctf_kg.ctf_kg.entities.NotBudgetInstitution;
-import com.ctf_kg.ctf_kg.entities.Product;
-import com.ctf_kg.ctf_kg.repositories.BudgetInstitutionRepository;
-import com.ctf_kg.ctf_kg.repositories.ContractRepository;
-import com.ctf_kg.ctf_kg.repositories.NotBudgetInstitutionRepository;
-import com.ctf_kg.ctf_kg.repositories.ProductRepository;
+import com.ctf_kg.ctf_kg.entities.*;
+import com.ctf_kg.ctf_kg.repositories.*;
 import com.ctf_kg.ctf_kg.service.ParserService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -43,6 +37,8 @@ public class ParserServiceImpl implements ParserService {
     private BudgetInstitutionRepository budgetInstitutionRepository;
     @Autowired
     private NotBudgetInstitutionRepository notBudgetInstitutionRepository;
+    @Autowired
+    private PublicPlanRepository publicPlanRepository;
 
     private WebDriver driver;
     private WebDriverWait wait;
@@ -87,15 +83,9 @@ public class ParserServiceImpl implements ParserService {
             for (int i = 0;i < webElements.size();i++){
                 System.out.println("\none user:\n");
                 WebElement webElement = webElements.get(i);
-                String[] parts = webElement.getText().split("\n");
-                System.out.println("the lengs of array: "+parts.length);
-                for (int k = 0; k < parts.length;k++){
-                    addToNotBadgetInstitution(parts[k]);
-                }
-                //addToContract(parts);
-                //addToProduct(parts);
-                //addToBadgetInstitution(parts);
-                //addToNotBadgetInstitution(parts);
+                List<WebElement> tdElements = webElement.findElements(By.tagName("td"));
+
+                addToPublicPlans(tdElements);
             }
             System.out.println("\nend\n");
 
@@ -108,6 +98,23 @@ public class ParserServiceImpl implements ParserService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private void addToPublicPlans(List<WebElement> tdElements) {
+        if (tdElements.size() < 6) {
+            System.out.println("Insufficient data in the row");
+            return;
+        }
+
+        PublicPlans publicPlans = new PublicPlans();
+        publicPlans.setNumber(tdElements.get(0).getText().trim());
+        publicPlans.setTypeOfPlan(tdElements.get(1).getText().trim());
+        publicPlans.setINN(tdElements.get(2).getText().trim());
+        publicPlans.setNameOfCompany(tdElements.get(3).getText().trim());
+        publicPlans.setYear(tdElements.get(4).getText().trim());
+        publicPlans.setAmount(tdElements.get(5).getText().trim());
+        publicPlans.setLastChange(tdElements.get(6).getText().trim());
+        publicPlanRepository.save(publicPlans);
     }
 
     private void addToNotBadgetInstitution(String input) {

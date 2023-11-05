@@ -6,4 +6,10 @@ import java.util.List;
 
 public interface ProductService {
     List<ProductResponse> getAll();
+
+    List<ProductResponse> search(String search);
+
+    int setFlag(String token, Long productId);
+
+    List<Object[]> getFive();
 }

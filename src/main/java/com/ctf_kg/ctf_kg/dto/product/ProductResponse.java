@@ -16,6 +16,8 @@ public class ProductResponse {
     private String publicationDate;
     private String typeOfProduct;
 
+    private int flag;//added just now
+
 
 
 }
